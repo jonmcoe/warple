@@ -8,20 +8,20 @@
     <meta name="description" content="Guess the hidden word in 6 tries. A new puzzle is available each day.">
 
     <!-- FB Meta Tags -->
-    <meta property="og:url" content="https://www.powerlanguage.co.uk/wordle/">
+    <meta property="og:url" content="https://www.timewarple.com">
     <meta property="og:type" content="website">
     <meta property="og:title" content="Wordle - A daily word game">
-    <meta property="og:description" content="Guess the hidden word in 6 tries. A new puzzle is available each day.">
-    <meta property="og:image" content="https://www.dailywordle.com/images/wordle_og_1200x630.png">
+    <meta property="og:description" content="Guess the hidden word in 6 tries. Play as much as you like">
+    <meta property="og:image" content="https://www.timewarple.com/images/wordle_og_1200x630.png">
 
     <!-- Twitter Meta Tags -->
     <meta name="twitter:card" content="summary_large_image">
-    <meta property="twitter:domain" content="powerlanguage.co.uk">
+    <meta property="twitter:domain" content="timewarple.com">. <!-- TODO -->
 
     <meta name="theme-color" content="#6aaa64" />
-    <link rel="manifest" href="manifest.json" />
-    <link href="images/wordle_logo_32x32.png" rel="icon shortcut" sizes="3232" />
-    <link href="images/wordle_logo_192x192.png" rel="apple-touch-icon" />
+    <link rel="manifest" href="manifest.json" />  <!-- TODO, also favicon -->
+    <link href="images/wordle_logo_32x32.png" rel="icon shortcut" sizes="3232" /> <!-- TODO -->
+    <link href="images/wordle_logo_192x192.png" rel="apple-touch-icon" />. <!-- TODO -->
 
     <style>
       /* Global Styles & Colors */
@@ -119,12 +119,37 @@
     </style>
   </head>
   <body>
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-2SSGMHY3NP"></script>
     <script>
       (function () {
         // Defining the hash before the main bundle allows the bundle access window.hash
         window.wordle = window.wordle || {};
         window.wordle.hash = 'c1506a22';
+
+        // start of hacks
+        var startingDate = new Date(2021,5,19,0,0,0,1);
+        if (!localStorage.getItem('warpTime')) {
+         localStorage.setItem('warpTime', startingDate.getTime()) 
+        } else if (localStorage.gameState && JSON.parse(localStorage.gameState)['gameStatus'] !== 'IN_PROGRESS') {
+          var currentlySet = parseInt(localStorage.getItem('warpTime'))
+          localStorage.setItem('warpTime', currentlySet + 60*60*24*1000)
+        } 
+        window.activeDate = new Date(parseInt(localStorage.getItem('warpTime')));
+        console.log(window.activeDate);
+        var hackedDate = class extends Date{
+          constructor(...options) {
+           if (options.length) {
+             super(...options);
+           } else {
+             super(window.activeDate);
+           }
+          }
+
+          static now() {
+            return window.activeDate.getTime();
+          }
+        };
+        window.Date = hackedDate;
+        // end of hacks
       })();
     </script>
     <script src="main.c1506a22.js"></script>
