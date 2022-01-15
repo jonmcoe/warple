@@ -38,7 +38,7 @@
       "sizes": "512x512"
     }
   ],
-  "start_url": "https://www.timewarple.com",
+  "start_url": "https://timewarple.com",
   "background_color": "#6aaa64",
   "display": "standalone",
   "theme_color": "#6aaa64",
