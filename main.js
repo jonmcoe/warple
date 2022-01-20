@@ -1,11 +1,12 @@
 window.saveWordleState = () => {
     const share = ((e, dark, colorBlind) => {
         const a = e.evaluations,
-            b = new Date(Math.max(e.lastPlayedTs, e.lastCompletedTs + 864e5)).setHours(0, 0, 0, 0) - new Date(2021, 5, 19, 0, 0, 0, 0),
-            s = Math.round(b / 864e5),
             t = e.rowIndex,
             o = e.isHardMode,
-            n = e.gameStatus === "WIN";
+            n = e.gameStatus === "WIN",
+            c = new Date(n ? e.lastCompletedTs : e.lastCompletedTs + 864e5)
+            b = c.setHours(0, 0, 0, 0) - new Date(2021, 5, 19, 0, 0, 0, 0),
+            s = Math.round(b / 864e5);
         let l = "Wordle ".concat(s," ",n ? t : "X", "/",6, o ? "*" : '');
         let d = "";
         a.forEach(function(e) {
