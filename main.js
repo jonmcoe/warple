@@ -1,7 +1,7 @@
 window.saveWordleState = () => {
     const share = ((e, dark, colorBlind) => {
         const a = e.evaluations,
-            b = new Date(e.lastPlayedTs).setHours(0, 0, 0, 0) - new Date(2021, 5, 19, 0, 0, 0, 0),
+            b = new Date(Math.max(e.lastPlayedTs, e.lastCompletedTs + 864e5)).setHours(0, 0, 0, 0) - new Date(2021, 5, 19, 0, 0, 0, 0),
             s = Math.round(b / 864e5),
             t = e.rowIndex,
             o = e.isHardMode,
@@ -14305,7 +14305,7 @@ var activeRound = Math.floor((new Date() - new Date(2021, 5, 19)) / 1000 / 60 / 
                             },
                         },
                         {
-                            key: "showStatsModal",
+                            key: "s",
                             value: function () {
                                 var e = this.$game.querySelector("game-modal"),
                                     a = document.createElement("game-stats");
