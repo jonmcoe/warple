@@ -996,7 +996,6 @@ var activeRound = Math.floor((new Date() - new Date(2021, 5, 19)) / 1000 / 60 / 
             var a = za();
             !(function (e) {
                 window.localStorage.setItem(wa, JSON.stringify(e));
-                window.saveWordleState();
             })(va(a, e));
         }
         var Sa = document.createElement("template");
@@ -1087,7 +1086,6 @@ var activeRound = Math.floor((new Date() - new Date(2021, 5, 19)) / 1000 / 60 / 
             dataLayer.push(arguments);
         }
         customElements.define("game-toast", Aa), (window.dataLayer = window.dataLayer || []), Ca("js", new Date());
-        Ca("config", "G-2SSGMHY3NP", { app_version: null === (Ea = window.wordle) || void 0 === Ea ? void 0 : Ea.hash, debug_mode: !1 });
         var La = [
                 "cigar",
                 "rebut",
@@ -14350,10 +14348,12 @@ var activeRound = Math.floor((new Date() - new Date(2021, 5, 19)) / 1000 / 60 / 
                                                 (e.restoringFromLocalStorage
                                                     ? e.showStatsModal()
                                                     : (e.gameStatus === es && (s.setAttribute("win", ""), e.addToast(ss[e.rowIndex - 1], 2e3)),
-                                                      e.gameStatus === as && e.addToast(e.solution.toUpperCase(), 1 / 0),
-                                                      setTimeout(function () {
-                                                          e.showStatsModal();
-                                                      }, 2500))),
+                                                        e.gameStatus === as && e.addToast(e.solution.toUpperCase(), 1 / 0),
+                                                        setTimeout(function () {
+                                                            // on puzzle complete
+                                                            window.saveWordleState();
+                                                            e.showStatsModal();
+                                                        }, 2500))),
                                             (e.restoringFromLocalStorage = !1));
                                     }),
                                     this.shadowRoot.addEventListener("game-setting-change", function (a) {
@@ -14776,19 +14776,199 @@ var activeRound = Math.floor((new Date() - new Date(2021, 5, 19)) / 1000 / 60 / 
             var t;
         }
         var Cs = document.createElement("template");
-        Cs.innerHTML =
-            '\n  <style>\n    .container {\n      display: flex;\n      flex-direction: column;\n      align-items: center;\n      justify-content: center;\n      padding: 16px 0; \n    }\n    h1 {\n      font-weight: 700;\n      font-size: 16px;\n      letter-spacing: 0.5px;\n      text-transform: uppercase;\n      text-align: center;\n      margin-bottom: 10px;\n    }\n  \n    #statistics {\n      display: flex;\n      margin-bottom: \n    }\n\n    .statistic-container {\n      flex: 1;\n    }\n\n    .statistic-container .statistic {\n      font-size: 36px;\n      font-weight: 400;\n      display: flex;\n      align-items: center;\n      justify-content: center;\n      text-align: center;\n      letter-spacing: 0.05em;\n      font-variant-numeric: proportional-nums;\n    }\n\n    .statistic.timer {\n      font-variant-numeric: initial;\n    }\n\n    .statistic-container .label {\n      font-size: 12px;\n      display: flex;\n      align-items: center;\n      justify-content: center;\n      text-align: center;\n    }\n\n    #guess-distribution {\n      width: 80%;\n    }\n\n    .graph-container {\n      width: 100%;\n      height: 20px;\n      display: flex;\n      align-items: center;\n      padding-bottom: 4px;\n      font-size: 14px;\n      line-height: 20px;\n    }\n\n    .graph-container .graph {\n      width: 100%;\n      height: 100%;\n      padding-left: 4px;\n    }\n\n    .graph-container .graph .graph-bar {\n      height: 100%;\n      /* Assume no wins */\n      width: 0%;\n      position: relative;\n      background-color: var(--color-absent);\n      display: flex;\n      justify-content: center;\n    }\n\n    .graph-container .graph .graph-bar.highlight {\n      background-color: var(--color-correct);\n    }\n\n    .graph-container .graph .graph-bar.align-right {\n      justify-content: flex-end;\n      padding-right: 8px;\n    }\n\n    .graph-container .graph .num-guesses {\n      font-weight: bold;\n      color: var(--tile-text-color);\n    }\n\n    #statistics,\n    #guess-distribution {\n      padding-bottom: 10px;\n    }\n\n    .footer {\n      display: flex;\n      width: 100%;\n    }\n\n    .countdown {\n      border-right: 1px solid var(--color-tone-1);\n      padding-right: 12px;\n      width: 50%;\n    }\n\n    .share {\n      display: flex;\n      justify-content: center;\n      align-items: center;\n      padding-left: 12px;\n      width: 50%;\n    }\n\n    .no-data {\n      text-align: center;\n    }\n\n    button#share-button {\n      background-color: var(--key-bg-correct);\n      color: var(--key-evaluated-text-color);\n      font-family: inherit;\n      font-weight: bold;\n      border-radius: 4px;\n      cursor: pointer;\n      border: none;\n      user-select: none;\n      display: flex;\n      justify-content: center;\n      align-items: center;\n      text-transform: uppercase;\n      -webkit-tap-highlight-color: rgba(0,0,0,0.3);\n      width: 80%;\n      font-size: 20px;\n      height: 52px;\n      -webkit-filter: brightness(100%);\n    }\n    button#share-button:hover {\n      opacity: 0.9;\n    }\n    button#share-button game-icon {\n      width: 24px;\n      height: 24px;\n      padding-left: 8px;\n    }\n  </style>\n\n  <div class="container">\n    <h1>Statistics</h1>\n    <div id="statistics"></div>\n    <h1>Guess Distribution</h1>\n    <div id="guess-distribution"></div>\n    <div class="footer"></div>\n  </div>\n';
+        Cs.innerHTML = `
+  <style>
+    .container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 16px 0; 
+    }
+    h1 {
+      font-weight: 700;
+      font-size: 16px;
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      text-align: center;
+      margin-bottom: 10px;
+    }
+  
+    #statistics {
+      display: flex;
+      margin-bottom: 
+    }
+
+    .statistic-container {
+      flex: 1;
+    }
+
+    .statistic-container .statistic {
+      font-size: 36px;
+      font-weight: 400;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      letter-spacing: 0.05em;
+      font-variant-numeric: proportional-nums;
+    }
+
+    .statistic.timer {
+      font-variant-numeric: initial;
+    }
+
+    .statistic-container .label {
+      font-size: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+
+    #guess-distribution {
+      width: 80%;
+    }
+
+    .graph-container {
+      width: 100%;
+      height: 20px;
+      display: flex;
+      align-items: center;
+      padding-bottom: 4px;
+      font-size: 14px;
+      line-height: 20px;
+    }
+
+    .graph-container .graph {
+      width: 100%;
+      height: 100%;
+      padding-left: 4px;
+    }
+
+    .graph-container .graph .graph-bar {
+      height: 100%;
+      /* Assume no wins */
+      width: 0%;
+      position: relative;
+      background-color: var(--color-absent);
+      display: flex;
+      justify-content: center;
+    }
+
+    .graph-container .graph .graph-bar.highlight {
+      background-color: var(--color-correct);
+    }
+
+    .graph-container .graph .graph-bar.align-right {
+      justify-content: flex-end;
+      padding-right: 8px;
+    }
+
+    .graph-container .graph .num-guesses {
+      font-weight: bold;
+      color: var(--tile-text-color);
+    }
+
+    #statistics,
+    #guess-distribution {
+      padding-bottom: 10px;
+    }
+
+    .footer {
+      display: flex;
+      width: 100%;
+    }
+
+    .countdown {
+      border-right: 1px solid var(--color-tone-1);
+      padding-right: 12px;
+      width: 50%;
+    }
+
+    .share {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding-left: 12px;
+      width: 50%;
+    }
+
+    .no-data {
+      text-align: center;
+    }
+
+    button#share-button {
+      background-color: var(--key-bg-correct);
+      color: var(--key-evaluated-text-color);
+      font-family: inherit;
+      font-weight: bold;
+      border-radius: 4px;
+      cursor: pointer;
+      border: none;
+      user-select: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-transform: uppercase;
+      -webkit-tap-highlight-color: rgba(0,0,0,0.3);
+      width: 80%;
+      font-size: 20px;
+      height: 52px;
+      -webkit-filter: brightness(100%);
+    }
+    button#share-button:hover {
+      opacity: 0.9;
+    }
+    button#share-button game-icon {
+      width: 24px;
+      height: 24px;
+      padding-left: 8px;
+    }
+  </style>
+
+  <div class="container">
+    <h1>Statistics</h1>
+    <div id="statistics"></div>
+    <h1>Guess Distribution</h1>
+    <div id="guess-distribution"></div>
+    <div class="footer"></div>
+  </div>`;
         var Ls = document.createElement("template");
-        Ls.innerHTML = '\n  <div class="statistic-container">\n    <div class="statistic"></div>\n    <div class="label"></div>\n  </div>\n';
+        Ls.innerHTML = `
+  <div class="statistic-container">
+    <div class="statistic"></div>
+    <div class="label"></div>
+  </div>`;
         var Ts = document.createElement("template");
-        Ts.innerHTML =
-            '\n    <div class="graph-container">\n      <div class="guess"></div>\n      <div class="graph">\n        <div class="graph-bar">\n          <div class="num-guesses">\n        </div>\n      </div>\n      </div>\n    </div>\n';
+        Ts.innerHTML =`
+    <div class="graph-container">
+      <div class="guess"></div>
+      <div class="graph">
+        <div class="graph-bar">
+          <div class="num-guesses">
+        </div>
+      </div>
+      </div>
+    </div>`;
         var Is = document.createElement("template");
         var nextDay = activeRound + 1;
-        Is.innerHTML =
-            '\n  <div class="countdown">\n    <h1>Next WORDLE</h1>\n    <div id="timer">\n      <div class="statistic-container">\n        <div class="statistic timer">\n          <button onclick="location.reload()">Click to play #' +
-            nextDay +
-            '</button> \n        </div>\n      </div>\n    </div>\n  </div>\n  <div class="share">\n    <button id="share-button">\n      Share <game-icon icon="share"></game-icon>\n    </button>\n  </div>\n';
+        Is.innerHTML =`
+  <div class="countdown">
+    <h1>Next WORDLE</h1>
+    <div id="timer">
+      <div class="statistic-container">
+        <div class="statistic timer">
+          <button onclick="location.reload()">Click to play #${nextDay}</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="share">
+    <button id="share-button">
+      Share <game-icon icon="share"></game-icon>
+    </button>
+  </div>`;
         var Ms = { currentStreak: "Current Streak", maxStreak: "Max Streak", winPercentage: "Win %", gamesPlayed: "Played", gamesWon: "Won", averageGuesses: "Av. Guesses" },
             Os = (function (e) {
                 r(t, e);
