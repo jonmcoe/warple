@@ -4,8 +4,9 @@ window.saveWordleState = () => {
             t = e.rowIndex,
             o = e.isHardMode,
             n = e.gameStatus === "WIN",
-            c = new Date(n ? e.lastCompletedTs : e.lastCompletedTs + 864e5)
-            b = c.setHours(0, 0, 0, 0) - new Date(2021, 5, 19, 0, 0, 0, 0),
+            f = new Date(2021, 5, 19, 0, 0, 0, 0)
+            c = new Date(Math.max(n ? e.lastCompletedTs : e.lastCompletedTs + 864e5, f))
+            b = c.setHours(0, 0, 0, 0) - f,
             s = Math.round(b / 864e5);
         let l = "Wordle ".concat(s," ",n ? t : "X", "/",6, o ? "*" : '');
         let d = "";
@@ -32,8 +33,8 @@ window.saveWordleState = () => {
         return {
             day: s,
             text: "".concat(l, "\n\n", d.trimEnd()),
-            hard: o,
             status: e.gameStatus,
+            gameState: e,
         };
     })(
         JSON.parse(window.localStorage.getItem('gameState')),
@@ -14306,7 +14307,7 @@ var activeRound = Math.floor((new Date() - new Date(2021, 5, 19)) / 1000 / 60 / 
                             },
                         },
                         {
-                            key: "s",
+                            key: "showStatsModal",
                             value: function () {
                                 var e = this.$game.querySelector("game-modal"),
                                     a = document.createElement("game-stats");

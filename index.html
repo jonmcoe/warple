@@ -133,7 +133,7 @@
       (function () {
         // Defining the hash before the main bundle allows the bundle access window.hash
         window.wordle = window.wordle || {};
-        window.wordle.hash = 'c1506a22';
+        window.wordle.hash = 'deadbeef';
 
         // start of hacks
         function getParameterByName(name, url = window.location.href) {
@@ -174,7 +174,8 @@
         // end of hacks
       })();
     </script>
-    <script src="main.min.js"></script>
+    <script src="main.js"></script>
+    <!-- <script src="main.deadbeef.js"></script> -->
     <game-app></game-app>
   </body>
 </html>
