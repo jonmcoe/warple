@@ -4,8 +4,9 @@ window.saveWordleState = () => {
             t = e.rowIndex,
             o = e.isHardMode,
             n = e.gameStatus === "WIN",
+            m = e.gameStatus === "FAIL",
             f = new Date(2021, 5, 19, 0, 0, 0, 0)
-            c = new Date(Math.max(n ? e.lastCompletedTs : e.lastCompletedTs + 864e5, f))
+            c = new Date(Math.max((n || m) ? e.lastCompletedTs : e.lastCompletedTs + 864e5, f))
             b = c.setHours(0, 0, 0, 0) - f,
             s = Math.round(b / 864e5);
         let l = "Wordle ".concat(s," ",n ? t : "X", "/",6, o ? "*" : '');
