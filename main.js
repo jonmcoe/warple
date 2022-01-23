@@ -219,7 +219,101 @@ this.wordle = this.wordle || {}, this.wordle.bundle = function(e) {
         return t
     }
     var k = document.createElement("template");
-    k.innerHTML = "\n<style>\n  :host {\n    display: inline-block;\n  }\n  .tile {\n    width: 100%;\n    display: inline-flex;\n    justify-content: center;\n    align-items: center;\n    font-size: 2rem;\n    line-height: 2rem;\n    font-weight: bold;\n    vertical-align: middle;\n    box-sizing: border-box;\n    color: var(--tile-text-color);\n    text-transform: uppercase;\n    user-select: none;\n  }\n  .tile::before {\n    content: '';\n    display: inline-block;\n    padding-bottom: 100%;\n  }\n\n  /* Allow tiles to be smaller on small screens */\n  @media (max-height: 600px) {\n    .tile {\n      font-size: 1em;\n      line-height: 1em;\n    }\n  }\n\n  .tile[data-state='empty'] {\n    border: 2px solid var(--color-tone-4);\n  }\n  .tile[data-state='tbd'] {\n    background-color: var(--color-tone-7);\n    border: 2px solid var(--color-tone-3);\n    color: var(--color-tone-1);\n  }\n  .tile[data-state='correct'] {\n    background-color: var(--color-correct);\n  }\n  .tile[data-state='present'] {\n    background-color: var(--color-present);\n  }\n  .tile[data-state='absent'] {\n    background-color: var(--color-absent);\n  }\n\n  .tile[data-animation='pop'] {\n    animation-name: PopIn;\n    animation-duration: 100ms;\n  }\n\n  @keyframes PopIn {\n    from {\n      transform: scale(0.8);\n      opacity: 0;\n    }\n\n    40% {\n      transform: scale(1.1);\n      opacity: 1;\n    }\n  }\n  .tile[data-animation='flip-in'] {\n    animation-name: FlipIn;\n    animation-duration: 250ms;\n    animation-timing-function: ease-in;\n  }\n  @keyframes FlipIn {\n    0% {\n      transform: rotateX(0);\n    }\n    100% {\n      transform: rotateX(-90deg);\n    }\n  }\n  .tile[data-animation='flip-out'] {\n    animation-name: FlipOut;\n    animation-duration: 250ms;\n    animation-timing-function: ease-in;\n  }\n  @keyframes FlipOut {\n    0% {\n      transform: rotateX(-90deg);\n    }\n    100% {\n      transform: rotateX(0);\n    }\n  }\n</style>\n<div class=\"tile\" data-state=\"empty\" data-animation=\"idle\"></div>\n";
+    k.innerHTML = `
+        <style>
+          :host {
+            display: inline-block;
+          }
+          .tile {
+            width: 100%;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 2rem;
+            line-height: 2rem;
+            font-weight: bold;
+            vertical-align: middle;
+            box-sizing: border-box;
+            color: var(--tile-text-color);
+            text-transform: uppercase;
+            user-select: none;
+          }
+          .tile::before {
+            content: '';
+            display: inline-block;
+            padding-bottom: 100%;
+          }
+
+          /* Allow tiles to be smaller on small screens */
+          @media (max-height: 600px) {
+            .tile {
+              font-size: 1em;
+              line-height: 1em;
+            }
+          }
+
+          .tile[data-state='empty'] {
+            border: 2px solid var(--color-tone-4);
+          }
+          .tile[data-state='tbd'] {
+            background-color: var(--color-tone-7);
+            border: 2px solid var(--color-tone-3);
+            color: var(--color-tone-1);
+          }
+          .tile[data-state='correct'] {
+            background-color: var(--color-correct);
+          }
+          .tile[data-state='present'] {
+            background-color: var(--color-present);
+          }
+          .tile[data-state='absent'] {
+            background-color: var(--color-absent);
+          }
+
+          .tile[data-animation='pop'] {
+            animation-name: PopIn;
+            animation-duration: 100ms;
+          }
+
+          @keyframes PopIn {
+            from {
+              transform: scale(0.8);
+              opacity: 0;
+            }
+
+            40% {
+              transform: scale(1.1);
+              opacity: 1;
+            }
+          }
+          .tile[data-animation='flip-in'] {
+            animation-name: FlipIn;
+            animation-duration: 250ms;
+            animation-timing-function: ease-in;
+          }
+          @keyframes FlipIn {
+            0% {
+              transform: rotateX(0);
+            }
+            100% {
+              transform: rotateX(-90deg);
+            }
+          }
+          .tile[data-animation='flip-out'] {
+            animation-name: FlipOut;
+            animation-duration: 250ms;
+            animation-timing-function: ease-in;
+          }
+          @keyframes FlipOut {
+            0% {
+              transform: rotateX(-90deg);
+            }
+            100% {
+              transform: rotateX(0);
+            }
+          }
+        </style>
+        <div class=\"tile\" data-state=\"empty\" data-animation=\"idle\"></div>`;
     var v = function(e) {
         r(t, e);
         var a = h(t);
@@ -278,7 +372,70 @@ this.wordle = this.wordle || {}, this.wordle.bundle = function(e) {
     }(c(HTMLElement));
     customElements.define("game-tile", v);
     var w = document.createElement("template");
-    w.innerHTML = '\n  <style>\n    :host {\n      display: block;\n    }\n    :host([invalid]){\n      animation-name: Shake;\n      animation-duration: 600ms;\n    }\n    .row {\n      display: grid;\n      grid-template-columns: repeat(5, 1fr);\n      grid-gap: 5px;\n    }\n    .win {\n      animation-name: Bounce;\n      animation-duration: 1000ms;\n    }\n\n    @keyframes Bounce {\n      0%, 20% {\n        transform: translateY(0);\n      }\n      40% {\n        transform: translateY(-30px);\n      }\n      50% {\n        transform: translateY(5px);\n      }\n      60% {\n        transform: translateY(-15px);\n      }\n      80% {\n        transform: translateY(2px);\n      }\n      100% {\n        transform: translateY(0);\n      }\n    }\n\n    @keyframes Shake {\n      10%,\n      90% {\n        transform: translateX(-1px);\n      }\n\n      20%,\n      80% {\n        transform: translateX(2px);\n      }\n\n      30%,\n      50%,\n      70% {\n        transform: translateX(-4px);\n      }\n\n      40%,\n      60% {\n        transform: translateX(4px);\n      }\n    }\n  </style>\n  <div class="row"></div>\n';
+    w.innerHTML = `
+        <style>
+          :host {
+            display: block;
+          }
+          :host([invalid]){
+            animation-name: Shake;
+            animation-duration: 600ms;
+          }
+          .row {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            grid-gap: 5px;
+          }
+          .win {
+            animation-name: Bounce;
+            animation-duration: 1000ms;
+          }
+  
+          @keyframes Bounce {
+            0%, 20% {
+              transform: translateY(0);
+            }
+            40% {
+              transform: translateY(-30px);
+            }
+            50% {
+              transform: translateY(5px);
+            }
+            60% {
+              transform: translateY(-15px);
+            }
+            80% {
+              transform: translateY(2px);
+            }
+            100% {
+              transform: translateY(0);
+            }
+          }
+  
+          @keyframes Shake {
+            10%,
+            90% {
+              transform: translateX(-1px);
+            }
+  
+            20%,
+            80% {
+              transform: translateX(2px);
+            }
+  
+            30%,
+            50%,
+            70% {
+              transform: translateX(-4px);
+            }
+  
+            40%,
+            60% {
+              transform: translateX(4px);
+            }
+          }
+        </style>
+        <div class="row"></div>`;
     var x = function(e) {
         r(t, e);
         var a = h(t);
@@ -1898,7 +2055,7 @@ this.wordle = this.wordle || {}, this.wordle.bundle = function(e) {
                 letter-spacing: 0.5px;
                 text-transform: uppercase;
                 text-align: center;
-                margin-bottom: 10px;
+                margin-bottom: 20px;
             }
 
             #history {
@@ -1921,15 +2078,42 @@ this.wordle = this.wordle || {}, this.wordle.bundle = function(e) {
 
             }
 
-            .history-entry .result {
+            .history-entry .board-container {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-grow: 1;
+            }
+
+            .history-entry .board {
+                flex-grow: 1;
+                display: grid;
+                grid-gap: 5px;
+                box-sizing: border-box;
             }
 
             .history-entry .result {
+                width: 220px;
+            }
+
+            @media (max-height: 600px) {
+                .history-entry .result {
+                    width: 150px;
+                }
+            }
+
+            .history-entry .result game-row {
+                width: 90%;
+            }
+
+            @media (max-height: 600px)
+            .history-entry .result game-row {
+                
             }
 
             .history-entry .actions {
                 display: flex;
-                flex-direction: column;
+                flex-direction: column; 
                 justify-content: center;
             }
 
@@ -1952,6 +2136,9 @@ this.wordle = this.wordle || {}, this.wordle.bundle = function(e) {
         <div class="history-entry">
             <span class="title"></span>
             <div class="result">
+                <div class="board-container">
+                    <div class="board"></div>
+                </div>
             </div>
             <div class="actions">
                 <button class="copy-history">Copy</div>
@@ -1980,11 +2167,20 @@ this.wordle = this.wordle || {}, this.wordle.bundle = function(e) {
                             .map((save, index) => {
                                 const entry = recordList.appendChild(historyEntry.content.cloneNode(!0));
                                 const title = recordList.getElementsByClassName("title")[index];
-                                const recordSpan = recordList.getElementsByClassName("result")[index];
+                                const board = recordList.getElementsByClassName("board")[index];
                                 const copyButton = recordList.getElementsByClassName("copy-history")[index];
 
-                                title.innerText = `Day #${save.day}`;
-                                recordSpan.innerText = save.text;
+                                title.innerText = `Day #${save.day} - ${save.status}`;
+
+                                if(save.gameState) {
+                                    for (var a = 0; a < save.gameState.rowIndex; a++) {
+                                        var s = document.createElement("game-row");
+                                        s.setAttribute("letters", save.gameState.boardState[a]);
+                                        s.setAttribute("length", 5);
+                                        save.gameState.evaluations[a] && (s.evaluation = save.gameState.evaluations[a]);
+                                        board.appendChild(s);
+                                    }
+                                }
 
                                 copyButton.addEventListener("click", (function(a) {
                                     a.stopPropagation();
@@ -2044,7 +2240,76 @@ this.wordle = this.wordle || {}, this.wordle.bundle = function(e) {
     }(c(HTMLElement));
     customElements.define("game-switch", $s);
     var Ps = document.createElement("template");
-    Ps.innerHTML = '\n  <style>\n  .instructions {\n    font-size: 14px;\n    color: var(--color-tone-1)\n  }\n\n  .examples {\n    border-bottom: 1px solid var(--color-tone-4);\n    border-top: 1px solid var(--color-tone-4);\n  }\n\n  .example {\n    margin-top: 24px;\n    margin-bottom: 24px;\n  }\n\n  game-tile {\n    width: 40px;\n    height: 40px;\n  }\n\n  :host([page]) section {\n    padding: 16px;\n    padding-top: 0px;\n  }\n\n  </style>\n  <section>\n    <div class="instructions">\n      <p>Warple allows Wordle enthusiasts, who typically can play only one specified puzzle per day, the opportunity to play all puzzles since the start. While the daily/communal nature of Wordle is a lot of its appeal, some may additionally be interested in enjoying those puzzles they\'ve missed. Original at <a href="https://www.powerlanguage.co.uk/wordle/">https://www.powerlanguage.co.uk/wordle/</a></p>\n<p>Guess the <strong>WORDLE</strong> in 6 tries.</p>\n      <p>Each guess must be a valid 5 letter word. Hit the enter button to submit.</p>\n      <p>After each guess, the color of the tiles will change to show how close your guess was to the word.</p>\n      <div class="examples">\n        <p><strong>Examples</strong></p>\n        <div class="example">\n          <div class="row">\n            <game-tile letter="w" evaluation="correct" reveal></game-tile>\n            <game-tile letter="e"></game-tile>\n            <game-tile letter="a"></game-tile>\n            <game-tile letter="r"></game-tile>\n            <game-tile letter="y"></game-tile>\n          </div>\n          <p>The letter <strong>W</strong> is in the word and in the correct spot.</p>\n        </div>\n        <div class="example">\n          <div class="row">\n            <game-tile letter="p"></game-tile>\n            <game-tile letter="i" evaluation="present" reveal></game-tile>\n            <game-tile letter="l"></game-tile>\n            <game-tile letter="l"></game-tile>\n            <game-tile letter="s"></game-tile>\n          </div>\n          <p>The letter <strong>I</strong> is in the word but in the wrong spot.</p>\n        </div>\n        <div class="example">\n          <div class="row">\n            <game-tile letter="v"></game-tile>\n            <game-tile letter="a"></game-tile>\n            <game-tile letter="g"></game-tile>\n            <game-tile letter="u" evaluation="absent" reveal></game-tile>\n            <game-tile letter="e"></game-tile>\n          </div>\n          <p>The letter <strong>U</strong> is not in the word in any spot.</p>\n        </div>\n      </div>\n      <p><strong>You are now playing #' + activeRound + ', originally playable on ' + formattedDate + '. Refresh page after solving to play the next one!<strong></p>\n    </div>\n  </section>\n';
+    Ps.innerHTML = `
+        <style>
+        .instructions {
+          font-size: 14px;
+          color: var(--color-tone-1)
+        }
+        
+        .examples {
+          border-bottom: 1px solid var(--color-tone-4);
+          border-top: 1px solid var(--color-tone-4);
+        }
+        
+        .example {
+          margin-top: 24px;
+          margin-bottom: 24px;
+        }
+        
+        game-tile {
+          width: 40px;
+          height: 40px;
+        }
+        
+        :host([page]) section {
+          padding: 16px;
+          padding-top: 0px;
+        }
+        
+        </style>
+        <section>
+          <div class="instructions">
+            <p>Warple allows Wordle enthusiasts, who typically can play only one specified puzzle per day, the opportunity to play all puzzles since the start. While the daily/communal nature of Wordle is a lot of its appeal, some may additionally be interested in enjoying those puzzles they\'ve missed. Original at <a href="https://www.powerlanguage.co.uk/wordle/">https://www.powerlanguage.co.uk/wordle/</a></p>
+            <p>Guess the <strong>WORDLE</strong> in 6 tries.</p>
+            <p>Each guess must be a valid 5 letter word. Hit the enter button to submit.</p>
+            <p>After each guess, the color of the tiles will change to show how close your guess was to the word.</p>
+            <div class="examples">
+              <p><strong>Examples</strong></p>
+              <div class="example">
+                <div class="row">
+                  <game-tile letter="w" evaluation="correct" reveal></game-tile>
+                  <game-tile letter="e"></game-tile>
+                  <game-tile letter="a"></game-tile>
+                  <game-tile letter="r"></game-tile>
+                  <game-tile letter="y"></game-tile>
+                </div>
+                <p>The letter <strong>W</strong> is in the word and in the correct spot.</p>
+              </div>
+              <div class="example">
+                <div class="row">
+                  <game-tile letter="p"></game-tile>
+                  <game-tile letter="i" evaluation="present" reveal></game-tile>
+                  <game-tile letter="l"></game-tile>
+                  <game-tile letter="l"></game-tile>
+                  <game-tile letter="s"></game-tile>
+                </div>
+                <p>The letter <strong>I</strong> is in the word but in the wrong spot.</p>
+              </div>
+              <div class="example">
+                <div class="row">
+                  <game-tile letter="v"></game-tile>
+                  <game-tile letter="a"></game-tile>
+                  <game-tile letter="g"></game-tile>
+                  <game-tile letter="u" evaluation="absent" reveal></game-tile>
+                  <game-tile letter="e"></game-tile>
+                </div>
+                <p>The letter <strong>U</strong> is not in the word in any spot.</p>
+              </div>
+            </div>
+            <p><strong>You are now playing #' + activeRound + ', originally playable on ' + formattedDate + '. Refresh page after solving to play the next one!<strong></p>
+          </div>
+        </section>`;
     var Hs = function(e) {
         r(t, e);
         var a = h(t);
