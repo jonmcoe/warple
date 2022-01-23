@@ -1,3 +1,48 @@
+window.saveWordleState = () => {
+    const share = ((e, dark, colorBlind) => {
+        const a = e.evaluations,
+            t = e.rowIndex,
+            o = e.isHardMode,
+            n = e.gameStatus === "WIN",
+            f = new Date(2021, 5, 19, 0, 0, 0, 0)
+            c = new Date(Math.max(n ? e.lastCompletedTs : e.lastCompletedTs + 864e5, f))
+            b = c.setHours(0, 0, 0, 0) - f,
+            s = Math.round(b / 864e5);
+        let l = "Wordle ".concat(s," ",n ? t : "X", "/",6, o ? "*" : '');
+        let d = "";
+        a.forEach(function(e) {
+            e &&
+                (e.forEach(function(e) {
+                        if (e) {
+                            let a = "";
+                            switch (e) {
+                                case "correct":
+                                    a = colorBlind ? "🟧" : "🟩";
+                                    break;
+                                case "present":
+                                    a = colorBlind ? "🟦" : "🟨";
+                                    break;
+                                case "absent":
+                                    a = dark ? "⬛" : "⬜";
+                            }
+                            d += a;
+                        }
+                    }),
+                    (d += "\n"));
+        });
+        return {
+            day: s,
+            text: "".concat(l, "\n\n", d.trimEnd()),
+            status: e.gameStatus,
+            gameState: e,
+        };
+    })(
+        JSON.parse(window.localStorage.getItem('gameState')),
+        JSON.parse(window.localStorage.getItem('darkTheme')),
+        JSON.parse(window.localStorage.getItem('colorBlindTheme'))
+    );
+    window.localStorage.setItem('saved'+share.day, JSON.stringify(share))
+}
 var activeRound = Math.floor(((new Date) - new Date(2021, 5, 19)) / 1000 / 60 / 60 / 24);
 this.wordle = this.wordle || {}, this.wordle.bundle = function(e) {
     "use strict";
@@ -1216,6 +1261,7 @@ this.wordle = this.wordle || {}, this.wordle.bundle = function(e) {
                         e.$keyboard.letterEvaluations = e.letterEvaluations, e.rowIndex < 6 && (e.canInput = !0);
                         var s = e.$board.querySelectorAll("game-row")[e.rowIndex - 1];
                         (a.path || a.composedPath && a.composedPath()).includes(s) && ([es, as].includes(e.gameStatus) && (e.restoringFromLocalStorage ? e.showStatsModal() : (e.gameStatus === es && (s.setAttribute("win", ""), e.addToast(ss[e.rowIndex - 1], 2e3)), e.gameStatus === as && e.addToast(e.solution.toUpperCase(), 1 / 0), setTimeout((function() {
+                            window.saveWordleState();
                             e.showStatsModal()
                         }), 2500))), e.restoringFromLocalStorage = !1)
                     })), this.shadowRoot.addEventListener("game-setting-change", (function(a) {
