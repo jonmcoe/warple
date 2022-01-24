@@ -145,12 +145,23 @@
             return decodeURIComponent(results[2].replace(/\+/g, ' '));
         }
 
-        var startingDate = new Date(2021,5,19,0,0,0,1);
+        var startingDate = new Date(2021,5,19,1,0,0,1);
+
+
+
         if (!localStorage.getItem('warpTime')) {
          localStorage.setItem('warpTime', startingDate.getTime()) 
         } else if (localStorage.gameState && JSON.parse(localStorage.gameState)['gameStatus'] !== 'IN_PROGRESS') {
-          var currentlySet = parseInt(localStorage.getItem('warpTime'))
-          localStorage.setItem('warpTime', currentlySet + 60*60*24*1000)
+          var currentlySetEpoch = parseInt(localStorage.getItem('warpTime'))
+          var currentlySetDate = new Date(currentlySetEpoch)
+          if (currentlySetDate.getHours() === 23) {
+            // realign those previously messed up by improperly handled daylight savings
+            currentlySetDate.setHours(25)
+          } else {
+            // normal case
+            currentlySetDate.setDate(currentlySetDate.getDate() + 1)
+          }
+          localStorage.setItem('warpTime', currentlySetDate.getTime())
         } 
         var tParam = getParameterByName('t');
         window.activeDate = tParam ? new Date(tParam) : new Date(parseInt(localStorage.getItem('warpTime')));
