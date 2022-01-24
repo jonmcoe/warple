@@ -2307,7 +2307,7 @@ this.wordle = this.wordle || {}, this.wordle.bundle = function(e) {
                 <p>The letter <strong>U</strong> is not in the word in any spot.</p>
               </div>
             </div>
-            <p><strong>You are now playing #' + activeRound + ', originally playable on ' + formattedDate + '. Refresh page after solving to play the next one!<strong></p>
+            <p><strong>You are now playing #` + activeRound + `, originally playable on ` + formattedDate + `. Refresh page after solving to play the next one!<strong></p>
           </div>
         </section>`;
     var Hs = function(e) {
