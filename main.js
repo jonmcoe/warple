@@ -1927,7 +1927,9 @@ this.wordle = this.wordle || {}, this.wordle.bundle = function(e) {
     Ts.innerHTML = '\n    <div class="graph-container">\n      <div class="guess"></div>\n      <div class="graph">\n        <div class="graph-bar">\n          <div class="num-guesses">\n        </div>\n      </div>\n      </div>\n    </div>\n';
     var Is = document.createElement("template");
     var nextDay = activeRound + 1;
-    Is.innerHTML = '\n  <div class="countdown">\n    <h1>Next WORDLE</h1>\n    <div id="timer">\n      <div class="statistic-container">\n        <div class="statistic timer">\n          <button onclick="location.reload()">Click to play #' + nextDay + '</button> \n        </div>\n      </div>\n    </div>\n  </div>\n  <div class="share">\n    <button id="share-button">\n      Share <game-icon icon="share"></game-icon>\n    </button>\n  </div>\n';
+    var inFuture = window.activeDate > window.realCurrentDate;
+    var futureElement = inFuture ? '<div style="color:red">You have played all past Wordles! Any further games are FUTURE Wordle puzzles. Are you sure you want to do that?</div>' : '';
+    Is.innerHTML = '\n  <div class="countdown">\n    <h1>Next WORDLE</h1>\n    <div id="timer">\n      <div class="statistic-container">\n        <div class="statistic timer">\n          <button onclick="location.reload()">Click to play #' + nextDay + '</button> \n        </div>'+futureElement+'\n      </div>\n    </div>\n  </div>\n  <div class="share">\n    <button id="share-button">\n      Share <game-icon icon="share"></game-icon>\n    </button>\n  </div>\n';
     var Ms = {
             currentStreak: "Current Streak",
             maxStreak: "Max Streak",

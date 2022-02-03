@@ -166,6 +166,7 @@
         var tParam = getParameterByName('t');
         window.activeDate = tParam ? new Date(tParam) : new Date(parseInt(localStorage.getItem('warpTime')));
         console.log(window.activeDate);
+        window.realCurrentDate = new Date((new Date).toDateString());
         var hackedDate = class extends Date{
           constructor(...options) {
            if (options.length) {
